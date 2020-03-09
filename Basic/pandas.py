@@ -1,4 +1,5 @@
-
+# https://sacko.tistory.com/18
+# 
 import pandas as pd
 
 melbourne_file_path = '../input/melbourne-housing-snapshot/melb_data.csv'
@@ -51,6 +52,11 @@ series_var.isnull()
 series_var.any()
 # >> return True:numpy.bool_ if there is True at least
 
+A = series > 0 # A is also series with boolean values which meet the condition
+series[series > 0] # series의 배열 값으로 Index는 Column명, Value는 boolean를 가진 series를 넣으면 True인 Column만 모아서 시리즈를 만듦
+                   # 그냥 위와 같은 표현은 씨리즈 중 조건을 만족하는 컬럼만 추출. 로 기억 하면 될듯
+series.sum() # series의 모든 value를 더한 단일 값을 출력. DataFrame.sum()과는 다르다.(DataFrame.sum()은 Series를 만든다.)
+
 
 
 ## Save to CSV from Pandas Data Frame
@@ -58,37 +64,4 @@ series_var.any()
 output = pd.DataFrame({'Id': X_test.index,
                        'SalePrice': preds_test})
 output.to_csv('submission.csv', index=False)
-
-
-##########################
-##### Missing Values #####
-##########################
-
-## Drop
-# Get names of columns with missing values
-cols_with_missing = [col for col in X_train.columns
-                     if X_train[col].isnull().any()] 
-# Drop columns in training and validation data
-reduced_X_train = X_train.drop(cols_with_missing, axis=1) # axis=0:row/1:colume
-
-## Imputation
-from sklearn.impute import SimpleImputer
-my_imputer = SimpleImputer()
-imputed_X_train = pd.DataFrame(my_imputer.fit_transform(X_train))
-imputed_X_valid = pd.DataFrame(my_imputer.transform(X_valid))
-# what is different between fit_transform and transform?
-
-# Imputation removed column names; put them back
-imputed_X_train.columns = X_train.columns
-imputed_X_valid.columns = X_valid.columns
-
-## An Extention to Imputation
-# Make copy to avoid changing original data (when imputing)
-X_train_plus = X_train.copy()
-X_valid_plus = X_valid.copy()
-
-# Make new columns indicating what will be imputed
-for col in cols_with_missing:
-    X_train_plus[col + '_was_missing'] = X_train_plus[col].isnull()
-    X_valid_plus[col + '_was_missing'] = X_valid_plus[col].isnull()
 
