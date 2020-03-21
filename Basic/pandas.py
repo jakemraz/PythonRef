@@ -1,5 +1,7 @@
+# useful pages
 # https://sacko.tistory.com/18
-# 
+# https://riptutorial.com/ko/pandas/
+#
 import pandas as pd
 
 melbourne_file_path = '../input/melbourne-housing-snapshot/melb_data.csv'
@@ -28,6 +30,8 @@ df['A'] = df['B'].str[-5:]
 
 df = df.drop(['column'], axis=1)
 df = df.drop(['row'])
+df.drop(['row'], inplace=True) # 실행한 객체의 값을 변경
+df = df.dropna(axis = 0) # np.NaN (결측값) 있는 행 Drop
 
 df= df.rename(columns={'A' : 'B'}) # change column name
 df= pd.DataFrame(df, columns=['A', 'C', 'B']) # change column order
