@@ -8,5 +8,7 @@ response = client.get_thing_shadow(
 
 # prase botocore.response.StreamingBody
 response_payload = json.loads(response['payload'].read().decode("utf-8"))
+battery = response_payload['state']['reported']['battery_remain']
+print(battery)
 
 print(response_payload)
