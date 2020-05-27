@@ -3,17 +3,17 @@ import time
 import datetime
 from botocore.exceptions import ClientError
 import json
+from boto3.dynamodb.conditions import Key, Attr
+from aws.decimal_encoder import DecimalEncoder
 
 def get_item():
   dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-2')
   table = dynamodb.Table('usages')
 
-  month = 5
-  day = 27
-
   KST = datetime.timezone(datetime.timedelta(hours=9))
-  sec = int(datetime.datetime(2020,month,day,0,0,0,tzinfo=KST).timestamp())
+  sec = int(datetime.datetime(2020,5,4,0,0,0,tzinfo=KST).timestamp())
 
+  
   try:
     response = table.get_item(Key={'deviceId': 'client-id-1', 'date': '2020-05-27'})
   except ClientError as e:
@@ -89,55 +89,27 @@ def upsert_item():
   #json.dumps(val, cls=decimal_encoder.DecimalEncoder)
 
 
-put_item()
+def query_item():
 
+  deviceId = 'client-id-1'
+  month = 5
+  day = 27
 
-# from __future__ import print_function
+  dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-2')
 
-# import base64
-# import json
-# import boto3
-# from botocore.exceptions import ClientError
+  KST = datetime.timezone(datetime.timedelta(hours=9))
+  start_timestamp = int(datetime.datetime(2020,month,day,0,0,0,tzinfo=KST).timestamp())
+  end_timestamp = int(datetime.datetime(2020,month,day+1,0,0,0,tzinfo=KST).timestamp()) - 1
 
-# print('Loading function')
+  table = dynamodb.Table('timeseries')
 
+  response = table.query(
+      KeyConditionExpression=Key('deviceId').eq(deviceId) & Key('timestamp').between(start_timestamp, end_timestamp)
+  )
 
-# def lambda_handler(event, context):
-#     #print("Received event: " + json.dumps(event, indent=2))
+  items = response['Items']
 
-#     payloads = []
+  print(json.dumps(items, cls=DecimalEncoder))
+  
 
-#     for record in event['Records']:
-#         # Kinesis data is base64 encoded so decode here
-#         payload = base64.b64decode(record['kinesis']['data']).decode('utf-8')
-#         #print(payload)
-#         payloads.append(payload)
-
-#     upsert_item(payloads)
-
-#     return 'Successfully processed {} records.'.format(len(event['Records']))
-
-
-# def upsert_item(payloads):
-#     dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-2')
-#     table = dynamodb.Table('usages')
-    
-#     try:
-#         response = table.get_item(Key={'deviceId': 'client-id-1', 'date': '2020-05-27'})
-#     except ClientError as e:
-#         print(e.response)
-#         events = []
-#     else:
-#         item = response.get('Item', None)
-#         events = item.get('events', []) if item is not None else []
-    
-#     events = events + payloads
-    
-#     item = {
-#         "date": "2020-05-27",
-#         "deviceId" : "client-id-1",
-#         "events" : events
-#     }
-    
-#     response = table.put_item(Item=item)
-    
+query_item()

@@ -1,5 +1,5 @@
 import dateutil.parser
-from datetime import datetime
+import datetime
 import time
 
 
@@ -16,4 +16,10 @@ def iso_to_sec():
   print(timestamp)
   
 
-iso_to_sec()
+def datetime_to_sec():
+  KST = datetime.timezone(datetime.timedelta(hours=9))
+  sec = int(datetime.datetime(2020,5,4,0,0,0,tzinfo=KST).timestamp())
+  print(sec)
+
+
+datetime_to_sec()
