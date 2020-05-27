@@ -3,6 +3,7 @@ import datetime
 import time
 
 
+#date = "2020-{:02d}-{:02d}".format(month, day)
 
 def iso_to_sec():
 
