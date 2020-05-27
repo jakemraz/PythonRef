@@ -5,8 +5,8 @@ from botocore.exceptions import ClientError
 import json
 
 def get_item():
-  dynamodb = boto3.resource('dynamodb', region_name='us-west-2')
-  table = dynamodb.Table('mon')
+  dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-2')
+  table = dynamodb.Table('usages')
 
   month = 5
   day = 27
@@ -15,11 +15,25 @@ def get_item():
   sec = int(datetime.datetime(2020,month,day,0,0,0,tzinfo=KST).timestamp())
 
   try:
-    response = table.get_item(Key={'deviceName': 'mon1', 'timestamp': sec})
+    response = table.get_item(Key={'deviceId': 'client-id-1', 'date': '2020-05-27'})
   except ClientError as e:
     print(e.response)
   else:
-    print(response['Item']['payload'])
+    print(response['Item'])
+    pass
+
+  item = response['Item']['events']
+  if len(item) == 144:
+    table.delete_item(Key={'deviceId': 'client-id-1', 'date': '2020-05-27'})
+
+
+def put_item():
+  dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-2')
+  table = dynamodb.Table('timeseries')
+
+  item = {'deviceId': 'a', 'timestamp': 1, 'tmp': 2}
+  response = table.put_item(Item=item)
+  print(response)
 
 
 def upsert_item():
@@ -75,7 +89,7 @@ def upsert_item():
   #json.dumps(val, cls=decimal_encoder.DecimalEncoder)
 
 
-upsert_item()
+put_item()
 
 
 # from __future__ import print_function
