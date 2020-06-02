@@ -22,5 +22,11 @@ def datetime_to_sec():
   sec = int(datetime.datetime(2020,5,4,0,0,0,tzinfo=KST).timestamp())
   print(sec)
 
+def get_time():
+  KST = datetime.timezone(datetime.timedelta(hours=9))
+  now = datetime.datetime.now(KST)
+  print(now.hour)
+  print(now.minute)
+  print(now.second)
 
-datetime_to_sec()
+get_time()
