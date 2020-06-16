@@ -112,4 +112,33 @@ def query_item():
   print(json.dumps(items, cls=DecimalEncoder))
   
 
-query_item()
+def query_item2():
+
+  dynamodb = boto3.resource('dynamodb')
+  table = dynamodb.Table('UserTmp')
+  response = table.query(
+        FilterExpression=
+            Attr('channel').eq('email') & Attr('read').eq(True),
+        KeyConditionExpression=
+            Key('user_id').eq('user_a')
+    )
+  print(response)
+
+
+  # response = table.query(
+  #   ProjectionExpression="send, #read",
+  #   ExpressionAttributeNames={"#read":"read"},
+  #   KeyConditionExpression=
+  #       Key('user_id').eq('user_a')
+  # )
+  # print(response['Count'])
+  # print(response['Items'])
+  # items = response['Items']
+
+  # a = sum(item["read"] == True for item in items)
+  # print(a)
+
+
+
+
+query_item2()
