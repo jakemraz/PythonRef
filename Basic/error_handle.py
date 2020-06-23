@@ -5,8 +5,6 @@ import boto3
 pinpoint = boto3.client('pinpoint')
 def error():
 
-  global pinpoint
-
   del pinpoint
 
   try:
