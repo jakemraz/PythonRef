@@ -11,3 +11,10 @@ value = 10 if x > 0 else 20
 
 # Array Copy
 train_X_plus = train_X.copy()
+
+# for loop with step
+def srange(start, stop, step):
+    numelements = int((stop-start-1)/float(step))
+    print(numelements)
+    for i in range(numelements + 1):
+        yield start + i * step
