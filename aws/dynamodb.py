@@ -26,6 +26,12 @@ def get_item():
   if len(item) == 144:
     table.delete_item(Key={'deviceId': 'client-id-1', 'date': '2020-05-27'})
 
+def get_item2():
+  ddb = boto3.resource('dynamodb')
+  table = ddb.Table('TestTable')
+  response = table.get_item(Key={'id':'1'})
+  print(response)
+
 
 def put_item():
   dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-2')
@@ -141,4 +147,5 @@ def query_item2():
 
 
 
-query_item2()
+#query_item2()
+get_item2()
