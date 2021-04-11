@@ -1,5 +1,6 @@
 import dateutil.parser
 import datetime
+import dateutil.parser as dp
 import time
 
 
@@ -28,5 +29,17 @@ def get_time():
   print(now.hour)
   print(now.minute)
   print(now.second)
+
+
+def convert_to_epoch_time(isotime):
+    t = isotime
+    parsed_t = dp.parse(t)
+    t_in_seconds = parsed_t.strftime('%s')
+    return t_in_seconds
+
+def convert_to_iso_time(epochtime):
+    return datetime.datetime.fromtimestamp(epochtime).astimezone().isoformat()
+
+
 
 get_time()
